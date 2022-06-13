@@ -7,11 +7,11 @@ import Button from 'react-bootstrap/Button'
 function Register(onOpen){
 
   const [show,setShowModal] = useState(onOpen);    
-  
+  console.log(show)
   const handleClose = () => setShowModal(false);
   
   return(
-    <Modal show = {show}>
+    <Modal show = {show} onHide = {handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>

@@ -18,7 +18,7 @@ const styleForm = {
 
 
 function Login(){
-    const [showModal, setShowModal] = useState();
+    const [showModal, setShowModal] = useState(false);
 
     function showModalHandler(){
         setShowModal(true);
@@ -27,7 +27,7 @@ function Login(){
     function closeModalHandler(){
         setShowModal(false);
     }
-
+    console.log(showModal)
     return(
 
         <section className = "vh-100">
@@ -71,7 +71,8 @@ function Login(){
                             
                             </div>
                 </div>
-                 { <Register onOpen = {showModal}/>} 
+                 
+                 {<Register onOpen = {showModal}/>} 
             </div>
             
             
