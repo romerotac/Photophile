@@ -1,6 +1,9 @@
+import { Button } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import Register from '../Components/Register';
+
+//import {Link} from "react-router-dom";
 //import fontawesome from '@fortawesome/fontawesome-common-types'
 //import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 //import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
@@ -15,6 +18,16 @@ const styleForm = {
 
 
 function Login(){
+    const [showModal, setShowModal] = useState();
+
+    function showModalHandler(){
+        setShowModal(true);
+    }
+
+    function closeModalHandler(){
+        setShowModal(false);
+    }
+
     return(
 
         <section className = "vh-100">
@@ -48,7 +61,7 @@ function Login(){
                                     </div>
 
                                     <p className="small mb-5 pb-lg-2"><a className='text-muted'>Forgot password?</a></p>
-                                    <p>Don't have an account?<Link to = {'/Register'} className = "link-info fst-italic" style={{textDecoration: 'auto'}}> Register here!</Link></p>
+                                    <p>Don't have an account?<button typeof = "button" className = "btn btn-info btn-lg btn-block"  onClick= {showModalHandler}> Register here!</button></p>
                                 </form>
                             </div>
                             
@@ -58,9 +71,12 @@ function Login(){
                             
                             </div>
                 </div>
-
+                 { <Register onOpen = {showModal}/>} 
             </div>
+            
+            
         </section>
+        
     );
         
 }
