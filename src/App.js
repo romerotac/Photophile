@@ -5,7 +5,7 @@ import './App.css';
 import Login from './pages/Login';
 import {Route,Routes,Redirect} from 'react-router-dom';
 import Register from './Components/Register';
-
+import UserPage from './pages/UserPage';
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
       <Routes>
           <Route path = '/' element = {<Login/>}/>
           <Route path = '/register' element = {<Register/>}/>
+          <Route path = '/userpage' element = {<UserPage/>}/>
       </Routes>
     </div>
     
