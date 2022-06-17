@@ -3,14 +3,15 @@ import React, {useState} from "react";
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import UserPage from "../pages/UserPage";
 import { Link } from "react-router-dom";
 
+
 function Register(onOpen){
 
+  //passing value from one page to another using state
   const [show,setShowModal] = useState(onOpen);
   
   const [values,setValues] = useState({
@@ -19,9 +20,6 @@ function Register(onOpen){
     password:'',
     passwordCheck:''
   });
-
-
-  console.log(show)
  
   const handleClose = () => setShowModal(false);
   
@@ -31,6 +29,8 @@ function Register(onOpen){
       [event.target.name]: event.target.value
     
     });
+
+
   };
   return(
     

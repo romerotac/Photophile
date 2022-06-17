@@ -1,8 +1,11 @@
 import { Button } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import Register from '../Components/Register';
 
+import { signInWithPopup } from 'firebase/auth';
+import { auth,provider } from '../firebase';
 //import {Link} from "react-router-dom";
 //import fontawesome from '@fortawesome/fontawesome-common-types'
 //import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -17,9 +20,20 @@ const styleForm = {
 };
 
 
-function Login(){
+function Login({setIsAuth}){
     const [showModal, setShowModal] = useState(false);
 
+    //sign in with google
+    let navigate = useNavigate();
+    const signInWithGoogle = () =>{
+        signInWithPopup(auth,provider).then((result) => {
+            localStorage.setItem("isAuth",true);
+            setIsAuth(true);
+            navigate('/userpage');
+        })
+    }
+   
+    
     function showModalHandler(){
         setShowModal(true);
     }
@@ -28,6 +42,13 @@ function Login(){
         setShowModal(false);
     }
     console.log(showModal)
+    
+
+    /*
+     onClick= {showModalHandler}
+     {<Register onOpen = {showModal}/>} 
+
+    */
     return(
 
         <section className = "vh-100">
@@ -62,6 +83,9 @@ function Login(){
 
                                     <p className="small mb-5 pb-lg-2"><a className='text-muted'>Forgot password?</a></p>
                                     <p>Don't have an account?<button typeof = "button" className = "btn btn-info btn-lg btn-block"  onClick= {showModalHandler}> Register here!</button></p>
+                                    
+                                    <button type='button' className='btn-google' onClick={signInWithGoogle}>Sign in with Google</button>
+
                                 </form>
                             </div>
                             
@@ -72,9 +96,9 @@ function Login(){
                             </div>
                 </div>
                  
-                 {<Register onOpen = {showModal}/>} 
+                
             </div>
-            
+            {<Register onOpen = {showModal}/>} 
             
         </section>
         
