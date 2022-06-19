@@ -10,7 +10,7 @@ import Events from './pages/Event';
 import Friends from './pages/Friends';
 import Marketplace from './pages/Marketplace';
 import Home from './pages/Home';
-
+import UploadPost from './Components/UploadPost';
 function App() {
     const[isAuth,setIsAuth] = useState(false);
   return (
@@ -25,6 +25,7 @@ function App() {
           <Route path = '/friends' element = {<Friends/>}/>
           <Route path = '/marketplace' element = {<Marketplace/>}/>
           <Route path = '/home' element = {<Home/>}/>
+          <Route path = '/upload' element = {<UploadPost/>}/>
       </Routes>        
     </div>
     

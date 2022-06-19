@@ -1,11 +1,15 @@
 import { Button } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import Register from '../Components/Register';
 
 import { signInWithPopup } from 'firebase/auth';
 import { auth,provider } from '../firebase';
+import { addDoc,collection, Firestore, getDoc, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+import { FirebaseError } from 'firebase/app';
+import { async } from '@firebase/util';
 //import {Link} from "react-router-dom";
 //import fontawesome from '@fortawesome/fontawesome-common-types'
 //import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -22,6 +26,34 @@ const styleForm = {
 
 function Login({setIsAuth}){
     const [showModal, setShowModal] = useState(false);
+    
+    // creating state to contain the user data
+    const [account,setAccount] = useState([]);
+
+    // Creating collection for account user
+    const postsCollectionRef = collection(db, 'accounts');
+
+    //getting the data on collection to the account
+    useEffect(() => {
+        const getAccoount = async () => {
+            const data = await getDocs(postsCollectionRef)
+            setAccount(data.docs.map((doc) => ({ ...doc.data(), })));
+        };
+        getAccoount();
+    },[]);
+    
+    //function that check if the user it's already in the database
+    function checkUserinDatabase(data){
+    for (let i = 0; i < account.length; i++){
+
+        if (data == account[i].id){
+            return;
+        } else {
+            addUser();
+        }
+    }
+    }
+    
 
     //sign in with google
     let navigate = useNavigate();
@@ -29,10 +61,15 @@ function Login({setIsAuth}){
         signInWithPopup(auth,provider).then((result) => {
             localStorage.setItem("isAuth",true);
             setIsAuth(true);
+            checkUserinDatabase(auth.currentUser.uid);
             navigate('/userpage');
         })
     }
-   
+    
+    
+    const addUser = async () =>{
+        await addDoc(postsCollectionRef, {id:auth.currentUser.uid,name: auth.currentUser.displayName,email:auth.currentUser.email})
+    }
     
     function showModalHandler(){
         setShowModal(true);
@@ -41,7 +78,8 @@ function Login({setIsAuth}){
     function closeModalHandler(){
         setShowModal(false);
     }
-    console.log(showModal)
+
+    //console.log(showModal)
     
 
     /*
