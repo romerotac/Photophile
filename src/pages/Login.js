@@ -66,7 +66,7 @@ function Login({setIsAuth}){
         })
     }
     
-    
+        
     const addUser = async () =>{
         await addDoc(postsCollectionRef, {id:auth.currentUser.uid,name: auth.currentUser.displayName,email:auth.currentUser.email})
     }
