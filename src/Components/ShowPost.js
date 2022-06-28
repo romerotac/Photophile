@@ -5,13 +5,16 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { faSignalPerfect } from '@fortawesome/free-solid-svg-icons';
 
 import { db,auth } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, snapshotEqual } from 'firebase/firestore';
 import { async } from '@firebase/util';
 
 function ShowPost(){
     const [postList, setPostList] = useState([]);
     const postsCollectionRef = collection(db,'posts');
-
+    //const postRef = db.collection('posts');
+   
+    
+    
     useEffect (() =>{
         const getPost = async () => {
             const data = await getDocs(postsCollectionRef);
@@ -19,6 +22,7 @@ function ShowPost(){
         };
         getPost();
     });
+    
     return(
         <>
         <div>
