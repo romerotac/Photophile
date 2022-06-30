@@ -59,39 +59,8 @@ function Home() {
         <div className='row' style={{background:"#bac9aa", margin:'auto', paddingLeft:'20%', paddingRight:'20%'}}>
         <h1>Post Area:</h1>
 
-                <div className='bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden' style={{borderRadius:'3%' , paddingBottom:'48px'}}>
-                    <div className='image position'>
-                    <img src='..\images\no-image.jpg' className='rounded' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
-                    </div>
-                    <div className='postHeader'>
-                        <div className='title'>
-                            <h3>Title</h3>
-                        </div>
-                    </div>
-                    <div className='post-container'>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Metus dictum at tempor commodo ullamcorper a lacus</p>
-                        <h5>@James Bond</h5>
-                    </div>
-                </div>
-                
-
+                <ShowPost/>
                 <div className='bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden' style={{borderRadius:'3%', paddingBottom:'48px'}}>
-                    <div className='image postion'>
-                    <img src='..\images\no-image.jpg' className='rounded' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
-                    </div>
-                    <div className='postHeader'>
-                        <div className='title'>
-                            <h3>Title</h3>
-                        </div>
-                    </div>
-                    <div className='post-container'>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Metus dictum at tempor commodo ullamcorper a lacus</p>
-                        <h5>@James Bond</h5>
-                    </div>
-                </div>
-                
-
-                <div className='bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden' style={{borderRadius:'3%' , paddingBottom:'48px'}}>
                     <div className='image postion'>
                     <img src='..\images\no-image.jpg' className='rounded' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
                     </div>

@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import  storage  from "../firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { faSignalPerfect } from '@fortawesome/free-solid-svg-icons';
@@ -11,17 +11,25 @@ import { async } from '@firebase/util';
 function ShowPost(){
     const [postList, setPostList] = useState([]);
     const postsCollectionRef = collection(db,'posts');
-    //const postRef = db.collection('posts');
+    const firstRenderRef = useRef(true);
+
+   // const postRef = db.collection('posts');
    
     
     
     useEffect (() =>{
+
+        if (firstRenderRef.current){
+            firstRenderRef.current = false;
+            return;
+        }
+
         const getPost = async () => {
             const data = await getDocs(postsCollectionRef);
             setPostList(data.docs.map((doc) => ({...doc.data(),id:doc.id})));
         };
         getPost();
-    });
+    },[]);
     
     return(
         <>
@@ -29,15 +37,16 @@ function ShowPost(){
         <h1>Post is here!!!!!</h1>
         
         {postList.map((post) => {
+            
             return (
                 <>
-                <div className='post'>
-                    <div className='image postion'>
-                    <img src='..\images\no-image.jpg' className='rounded' style={{height:'200px',width:"200px"}}></img>   
+                <div className='bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden' style={{borderRadius:'3%' , paddingBottom:'48px'}}>
+                    <div className='image position'>
+                    <img src={[post.imgPath]} className='rounded' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
                     </div>
                     <div className='postHeader'>
                         <div className='title'>
-                            <h3>{post.title}</h3>
+                            <h3>{[post.title]}</h3>
                         </div>
                     </div>
                     <div className='post-container'>

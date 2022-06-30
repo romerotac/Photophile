@@ -26,17 +26,7 @@ function UploadPost() {
     const [imgPath, setImgPath] = useState("");
     const postsCollectionRef = collection(db,"posts");
 
-    const createPost = async () =>{
-        await addDoc(postsCollectionRef, {
-        title,
-        postText,
-        author: {name: auth.currentUser.displayName, id: auth.currentUser.uid},
-        
-    });
-    };
-
     
-
     function handleChange(event) {
         setFile(event.target.files[0]);
     }
@@ -52,7 +42,7 @@ function UploadPost() {
        
 
         const uploadTask = uploadBytesResumable(storageRef,file);
-        /*
+        
         uploadTask.on(
             "state_changed",
             (snapshot) => {
@@ -64,18 +54,24 @@ function UploadPost() {
                 setPercent(percent);
             },
             (err) => console.log(err),
-            () => {
-                // download url
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    console.log(url);
+            async () => {
+                const urlLoad = await getDownloadURL(storageRef);
+                //creating document in firebase with the url image
+                await addDoc(postsCollectionRef, {
+                    title,
+                    postText,
+                    author: {name: auth.currentUser.displayName, id: auth.currentUser.uid},
+                    imgPath:urlLoad,
                 });
-            }
+                }
+            
         ); 
-        */
+        
 
         // path will be used to identify wich image you posted that is store in the storage with folder name the uid of the user
         //setImgPath(auth.currentUser.uid + "/" + file.name);
-        createPost();
+       
+        
     }
 
   
