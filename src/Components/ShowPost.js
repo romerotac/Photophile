@@ -12,10 +12,6 @@ function ShowPost(){
     const [postList, setPostList] = useState([]);
     const postsCollectionRef = collection(db,'posts');
     const firstRenderRef = useRef(true);
-
-   // const postRef = db.collection('posts');
-   
-    
     
     useEffect (() =>{
 
@@ -29,7 +25,7 @@ function ShowPost(){
             setPostList(data.docs.map((doc) => ({...doc.data(),id:doc.id})));
         };
         getPost();
-    },[]);
+    },[getDocs(postsCollectionRef)]);
     
     return(
         <>
@@ -37,12 +33,12 @@ function ShowPost(){
         <h1>Post is here!!!!!</h1>
         
         {postList.map((post) => {
-            
+
             return (
                 <>
                 <div className='bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden' style={{borderRadius:'3%' , paddingBottom:'48px'}}>
                     <div className='image position'>
-                    <img src={[post.imgPath]} className='rounded' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
+                    <img src={[post.imgPath]} className='img-fluid mx-auto card-img-top' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
                     </div>
                     <div className='postHeader'>
                         <div className='title'>

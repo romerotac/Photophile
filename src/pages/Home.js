@@ -1,10 +1,19 @@
+import { db,auth } from '../firebase';
+import { collection, getDocs, snapshotEqual } from 'firebase/firestore';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState} from "react";
 import Navigation from '../Components/Navigation';
 import UploadPost from '../Components/UploadPost';
 import ShowPost from '../Components/ShowPost';
 import {BsInstagram, BsFacebook, BsTwitter, BsPinterest} from 'react-icons/bs'
+import {FiEdit} from 'react-icons/fi';
+
 function Home() {
+
+    const postsCollectionRef = collection(db,'user');
+    const userName = auth.currentUser.displayName;
+    console.log(userName);
     return(
         <div>
         <div className='container-fluid px-0'>
@@ -20,15 +29,15 @@ function Home() {
             
             <div className='card-body'>
            
-            <div className='row ' >
+            <div className='row '>
             <div className='col'style={{padding:'24px'}}>
-            <h3>James Bond</h3>
+            <h3>{userName}</h3>
             </div>
             </div>
                
             <div className='row' >
             <div className='col'>
-            <BsInstagram style={{height:'30px',width:"30px"}}/>
+            <button style={{border:'none', background:'none'}}><BsInstagram style={{height:'30px',width:"30px"}}/></button>
             </div>
             <div className='col'>
            
@@ -62,7 +71,7 @@ function Home() {
                 <ShowPost/>
                 <div className='bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden' style={{borderRadius:'3%', paddingBottom:'48px'}}>
                     <div className='image postion'>
-                    <img src='..\images\no-image.jpg' className='rounded' style={{height:'300px',width:"300px", objectFit:'fil'}}></img>   
+                    <img src='..\images\no-image.jpg' className='img-fluid mx-auto card-img-top' style={{height:'300px',width:"300px", objectFit:'fil'}} ></img>   
                     </div>
                     <div className='postHeader'>
                         <div className='title'>
