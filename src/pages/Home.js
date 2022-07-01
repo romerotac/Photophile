@@ -6,14 +6,26 @@ import React, {useState} from "react";
 import Navigation from '../Components/Navigation';
 import UploadPost from '../Components/UploadPost';
 import ShowPost from '../Components/ShowPost';
+import EventCarousel from '../Components/EventCarousel';
+
 import {BsInstagram, BsFacebook, BsTwitter, BsPinterest} from 'react-icons/bs'
 import {FiEdit} from 'react-icons/fi';
+import {GrAddCircle} from 'react-icons/gr';
+
 
 function Home() {
 
-    const postsCollectionRef = collection(db,'user');
-    const userName = auth.currentUser.displayName;
-    console.log(userName);
+    const [showModal, setShowModal] = useState(false);
+
+    function showModalHandler(){
+        setShowModal(true);
+    }
+
+    function closeModalHandler(){
+        setShowModal(false);
+    }
+
+
     return(
         <div>
         <div className='container-fluid px-0'>
@@ -31,7 +43,7 @@ function Home() {
            
             <div className='row '>
             <div className='col'style={{padding:'24px'}}>
-            <h3>{userName}</h3>
+            <h3>james bond</h3>
             </div>
             </div>
                
@@ -56,19 +68,24 @@ function Home() {
             </div>
 
             <div className='col col-md-8 rounded-3'style={{background: ""}}>
-            <h1>Post something:</h1>
-            <UploadPost/>
-            
-               
+            <h1>Calendar:</h1>
+            <div style={{padding:'inherit'}}>
+                <EventCarousel/>
+            </div>
             </div>   
         </div>
-        
-        
+
         
         <div className='row' style={{background:"#bac9aa", margin:'auto', paddingLeft:'20%', paddingRight:'20%'}}>
-        <h1>Post Area:</h1>
 
-                <ShowPost/>
+                <h1>Create new Post:</h1>    
+                <div className='bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden' style={{borderRadius:'3%', paddingBottom:'48px'}}>
+                    <button onClick={showModalHandler} style={{height:'350px', width:'350px', border:'none' , background:'white',  maxWidth: '100%'} }> <GrAddCircle style={{height:'30px',width:"30px", objectFit:'fill'}}/> </button>
+                </div>
+                
+                <ShowPost/>   
+
+            
                 <div className='bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden' style={{borderRadius:'3%', paddingBottom:'48px'}}>
                     <div className='image postion'>
                     <img src='..\images\no-image.jpg' className='img-fluid mx-auto card-img-top' style={{height:'300px',width:"300px", objectFit:'fil'}} ></img>   
@@ -86,7 +103,8 @@ function Home() {
                 
 
         </div>
-            
+
+         
            
         <div className='row'style={{background:"yellow", margin: 'auto'}}>
                 <div className='col'>
@@ -99,7 +117,11 @@ function Home() {
         </div>
         
         </div>
+
+        {showModal === true && <UploadPost showModal = {showModal} setShowModal = {setShowModal}/>}
+
         </div>
+        
     );
 }
 export default Home;

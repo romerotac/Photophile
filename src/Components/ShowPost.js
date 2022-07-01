@@ -13,6 +13,7 @@ function ShowPost(){
     const postsCollectionRef = collection(db,'posts');
     const firstRenderRef = useRef(true);
     
+    
     useEffect (() =>{
 
         if (firstRenderRef.current){
@@ -25,7 +26,9 @@ function ShowPost(){
             setPostList(data.docs.map((doc) => ({...doc.data(),id:doc.id})));
         };
         getPost();
-    },[getDocs(postsCollectionRef)]);
+    },
+    // change into this to have constant change 'getDocs(postsCollectionRef)'
+    []);
     
     return(
         <>
