@@ -32,27 +32,25 @@ const UploadPost = (props) =>  {
     const postsCollectionRef = collection(db,"posts");
 
 // showing picture 
-    const [image,setImage] = useState();
+
     const [preview, setPreview] = useState("");
+
     const handleChange = event => {
-
+        
         const fileUploaded = event.target.files[0];
-        console.log(fileUploaded);
+        
         setFile(fileUploaded);
+        
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setPreview(event.target.result);
+            console.log(preview);
+        }   
+
+        reader.readAsDataURL(fileUploaded);
+
     }
-
-    useEffect(() => {
-        if(image) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result.toString);
-            }
-            reader.readAsDataUrl(image);
-        }else { 
-            setPreview(null)
-        }
-    },[image]);
-
     
     function handleUpload(){
         
@@ -106,17 +104,16 @@ const UploadPost = (props) =>  {
             <input type='text' name = "Title" placeholder='Title' className='form-control' onChange={(event) => {setTitle(event.target.value)}}/>
             <hr/>
             <textarea className='form-control' name = "PostArea" placeholder='Write your post here...' rows={'3'} style={{height:'90px'}} onChange={(event) => {setPostText(event.target.value)}}></textarea>
-            <h1> {preview} cc </h1>
             <hr/>
 
             <input type='file' onChange={handleChange}/>
             
             
-            <div className='container'>
+            <div className='container' style={{textAlign:'center', paddingTop:'2%'}}>
                 {preview ? (
-                 <img src= {preview} className='img-fluid mx-auto' style={{width: '400px', height:'400px' }}/>
+                 <img src= {preview} className='img-fluid mx-auto' style={{width: '400px', height:'400px', maxWidth:'400px'}}/>
                 ):
-                (<img src= "..\images\no-image.jpg" className='img-fluid mx-auto' style={{width: '400px', height:'400px' }}/>
+                (<img src= "..\images\no-image.jpg" className='img-fluid mx-auto' style={{width: '400px', height:'400px', maxWidth:'400px'}}/>
                 )}
             </div>
             
