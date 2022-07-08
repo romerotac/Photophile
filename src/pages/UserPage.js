@@ -2,14 +2,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState} from "react";
 import {useLocation} from 'react-router-dom';
 import Navigation from '../Components/Navigation';
-import Image from 'react-bootstrap/Image'
+import Image from 'react-bootstrap/Image';
+import {useSelector} from 'react-redux';
+import {getEditProfileOfClicks} from "../reduxFiles/selectors";
+
 
 function UserPage(){
+
+    const profileData = useSelector(getEditProfileOfClicks);
+
+    console.log(profileData);
     //const location = useLocation();
     //const data = location.state;
     //console.log(data)
     return(
-        <>       
+        <>
+        <h1>{profileData}</h1>       
         <div className='container-fluid px-0'>
             <div className= "main-body">
             <Navigation/> 
@@ -87,30 +95,30 @@ function UserPage(){
                             <hr/>
                             <div className='row'>
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">Full Name</h6>
+                                    <h6 class="mb-0">Birthday</h6>
                                 </div>
-                            <div class="col-sm-9 text-secondary"> Kenneth Valdez</div>
+                            <div class="col-sm-9 text-secondary"> 01/02/1993</div>
                             </div>
                             <hr/>
                             <div className='row'>
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">Full Name</h6>
+                                    <h6 class="mb-0">State</h6>
                                 </div>
-                            <div class="col-sm-9 text-secondary"> Kenneth Valdez</div>
+                            <div class="col-sm-9 text-secondary">Virginia</div>
                             </div>
                             <hr/>
                             <div className='row'>
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
+                                <h6 class="mb-0">Email</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary"> Kenneth Valdez</div>
+                            <div class="col-sm-9 text-secondary">dummy@email.com</div>
                             </div>
                             <hr/>
                             <div className='row'>
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">Full Name</h6>
+                                    <h6 class="mb-0">Favorite Camera</h6>
                                 </div>
-                            <div class="col-sm-9 text-secondary"> Kenneth Valdez</div>
+                            <div class="col-sm-9 text-secondary">Fujifilm X-T4</div>
                             </div>
                             <hr/>
                             <div className='row'>
@@ -118,7 +126,7 @@ function UserPage(){
                                     <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
                                 </div>
                             </div>
-
+                            
                         </div>
                     </div>
                 </div>

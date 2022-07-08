@@ -1,0 +1,1 @@
+export const getEditProfileOfClicks = state => state.profileData;

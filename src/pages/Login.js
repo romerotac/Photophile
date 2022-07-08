@@ -10,6 +10,10 @@ import { addDoc,collection, Firestore, getDoc, getDocs } from 'firebase/firestor
 import { db } from '../firebase';
 import { FirebaseError } from 'firebase/app';
 import { async } from '@firebase/util';
+
+
+import { useDispatch } from 'react-redux';
+import {editProfile} from '../reduxFiles/actions'
 //import {Link} from "react-router-dom";
 //import fontawesome from '@fortawesome/fontawesome-common-types'
 //import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -25,28 +29,39 @@ const styleForm = {
 
 
 function Login({setIsAuth}){
+
+    //use to activate the sotrage of data in changeProfileOnClick
+    const dispatch = useDispatch();
+    
     const [showModal, setShowModal] = useState(false);
     
     // creating state to contain the user data
     const [account,setAccount] = useState([]);
+    
+    //tryOne
+    const [profile,setProfile] = useState([]);
 
     // Creating collection for account user
     const postsCollectionRef = collection(db, 'accounts');
-
+    const profileCollectionRef = collection(db, 'profile');
     //getting the data on collection to the account
     useEffect(() => {
-        const getAccoount = async () => {
+        const getAccount = async () => {
+            /** 
             const data = await getDocs(postsCollectionRef)
             setAccount(data.docs.map((doc) => ({ ...doc.data(), })));
+            */
+            const  data2 = await getDocs(profileCollectionRef)
+            setProfile(data2.docs.map((doc) => ({...doc.data(), })));
         };
-        getAccoount();
+        getAccount();
     },[]);
     
     //function that check if the user it's already in the database
     function checkUserinDatabase(data){
     for (let i = 0; i < account.length; i++){
 
-        if (data == account[i].id){
+        if (data === account[i].id){
             return;
         } else {
             addUser();
@@ -62,14 +77,19 @@ function Login({setIsAuth}){
             localStorage.setItem("isAuth",true);
             setIsAuth(true);
             checkUserinDatabase(auth.currentUser.uid);
+            console.log(profile[0].name);
+            dispatch(editProfile(profile[0].name));
             navigate('/userpage');
         })
     }
     
         
     const addUser = async () =>{
-        await addDoc(postsCollectionRef, {id:auth.currentUser.uid,name: auth.currentUser.displayName,email:auth.currentUser.email})
+        await addDoc(postsCollectionRef, {id:auth.currentUser.uid,name: auth.currentUser.displayName,email:auth.currentUser.email});
+        await addDoc(profileCollectionRef, {id:auth.currentUser.uid,name:auth.currentUser.displayName,state:'',email:auth.currentUser.email,favoriteCamera:'', profileImgPath:'',social:{website:'',twitter:'',instagram:'',facebook:'',pinterest:''}});
     }
+
+
     
     function showModalHandler(){
         setShowModal(true);

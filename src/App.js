@@ -11,10 +11,14 @@ import Friends from './pages/Friends';
 import Marketplace from './pages/Marketplace';
 import Home from './pages/Home';
 import UploadPost from './Components/UploadPost';
+
+import {Provider} from 'react-redux';
+import {store} from './reduxFiles/store';
+
 function App() {
     const[isAuth,setIsAuth] = useState(false);
   return (
-    
+    <Provider store = {store}>
 
     <div className="App">
       <Routes>
@@ -28,7 +32,7 @@ function App() {
           <Route path = '/upload' element = {<UploadPost/>}/>
       </Routes>        
     </div>
-    
+    </Provider>
   );
 }
 
