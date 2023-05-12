@@ -63,7 +63,9 @@ function Login({setIsAuth}){
             return ref.data.id == data
         })
         console.log(isEqual)
-        return isEqual
+        if (isEqual != true){
+            addUser()
+        }
     }
 
     
