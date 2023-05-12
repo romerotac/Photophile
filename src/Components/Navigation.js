@@ -41,14 +41,12 @@ function Navigation(){
                         
                         <Nav className="me-auto">
                             <Nav.Link href = "/userpage">Profile</Nav.Link>
-                            <Nav.Link href = "/events">Events</Nav.Link>
-                            <Nav.Link href = "/friends">Friends</Nav.Link>
-                            <Nav.Link href = "/marketplace">Marketplace</Nav.Link>
                         </Nav>
 
 
                         <Navbar.Collapse className="justify-content-center">
-
+                    
+                        {/*  --Will be added in the future--
                         <Form className='d-flex'>
                             
                             <FormControl
@@ -60,6 +58,8 @@ function Navigation(){
                             <Button variant='outline-info'>Search</Button>
                            
                         </Form>
+                        */}    
+
 
                         </Navbar.Collapse>
 

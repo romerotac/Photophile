@@ -1,140 +1,158 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, {useState} from "react";
+import React, {useState, useEffect, useReducer, useId} from "react";
 import {useLocation} from 'react-router-dom';
 import Navigation from '../Components/Navigation';
 import Image from 'react-bootstrap/Image';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getEditProfileOfClicks} from "../reduxFiles/selectors";
-
-
+import { db } from '../firebase';
+import { addDoc,collection, Firestore, getDocs } from 'firebase/firestore';
+import { FirestoreService } from 'firebase/firestore';
+import EditModal from '../Components/EditModal';
+import "../css/Userpage.css"
+import {MdOutlinePersonOff, MdUpload} from 'react-icons/md';
+import {editName,editState,editEmail,editfavoriteCamera, editPhoto} from '../reduxFiles/actions'
+import EditPhotoProfile from '../Components/EditPhotoProfile';
+import { Placeholder } from 'react-bootstrap';
+import {BsInstagram, BsFacebook, BsTwitter, BsPinterest} from 'react-icons/bs'
+import {GrFacebook} from 'react-icons/gr'
 function UserPage(){
-
+    const dispatch = useDispatch();
+    
     const profileData = useSelector(getEditProfileOfClicks);
+    const [profile, setProfile] = useState([]);
+    const [id, setID] = useState("");
+    const [loading, setLoading] = useState(true)
 
-    console.log(profileData);
-    //const location = useLocation();
-    //const data = location.state;
-    //console.log(data)
+    useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 3000);
+    getAccount()
+    return () => clearTimeout(timer);
+    }, []);
+
+    function getAccount() {
+        const accountCollectionRef = collection(db, 'accounts');
+        getDocs(accountCollectionRef)
+        .then(response => {
+            const prf = response.docs.map(doc => ({
+                data:doc.data(),
+                id:doc.id
+            }))
+            let user = prf.filter((user) => (user.data.id === localStorage.getItem('userID')))
+            
+            
+            setProfile(user[0].data)
+            setID(user[0].id)
+            dispatch(editName(user[0].data.name))
+            dispatch(editState(user[0].data.state))
+            dispatch(editEmail(user[0].data.email))
+            dispatch(editfavoriteCamera(user[0].data.favoriteCamera))
+            dispatch(editPhoto(user[0].data.profileImgPath))
+            
+        })
+        .catch(error => console.log(error.message))
+    }
+    
     return(
-        <>
-        <h1>{profileData}</h1>       
-        <div className='container-fluid px-0'>
-            <div className= "main-body">
-            <Navigation/> 
+        <>    
+        <div className='container-fluid px-0 '>
+            <section class="min-vh-100 d-flex align-items-center justify-content-center py-3" style={{background: "#61D0FF"}}>
+            <div className='fixed-top'>
+                <div className= "main-body">
+                <Navigation/> 
+                </div>
             </div>
-            <div className='row gutters-sm'>
-                <div className='col-md-4 mb-3'>
+            
+            <div class="container" style={{borderRadius: '15px', background:"white", padding: "2%" }}> 
+            
+                <div class="row justify-content-between align-items-center">
+                <div className='col-md-4 mb-3 h-100'>
                     <div className='card'>
                         <div className='card-body'>
                         <div className="d-flex flex-column align-items-center text-center"> 
-                        <Image rounded src="/images/no-profile.jpg" alt="Admin" width="150"/>
+                        <EditPhotoProfile id = {id} profile = {profile}/>
                             <div className="mt-3">
-                                <h4>John Doe</h4>
-                                <p className="text-secondary mb-1">Full Stack Developer</p>
-                                <p className="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
-                                 <button className="btn btn-primary">Follow</button> 
-                                 <button className="btn btn-outline-primary">Message</button>
+                                {   loading == true ?
+                                    <h4><Placeholder xs = {10}/></h4> 
+                                    :
+                                    <h4>{profileData.fullName}</h4>
+                                }
+                                <p className="text-muted font-size-sm">Bay Area, San Francisco, {profileData.state}</p>
+                                 <div className='row'>
+                                    <div className='col-3'><BsInstagram style={{height:'25px',width:"25px"}}/></div>
+                                    <div className='col-3'><BsFacebook style={{height:'25px',width:"25px"}}/></div>
+                                    <div className='col-3'><BsTwitter style={{height:'25px',width:"25px"}}/></div>
+                                    <div className='col-3'><BsPinterest style={{height:'25px',width:"25px"}}/></div>
+                                 </div>
                                  </div>
                                  </div>
                         </div>
                     </div>
-                    <div className="card mt-3">
-                    <ul className="list-group list-group-flush">
-                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 className="mb-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 
-                                Website </h6>
-                            <span className="text-secondary"> https://bootdey.com </span>
-                        </li>
-                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 className="mb-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-github mr-2 icon-inline">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                                </svg>Github
-                            </h6> 
-                            <span className="text-secondary">bootdey</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 className="mb-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-twitter mr-2 icon-inline text-info">
-                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                                </svg>Twitter</h6> 
-                                <span class="text-secondary">@bootdey</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 className="mb-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                                </svg>Instagram</h6> 
-                                <span className="text-secondary">bootdey</span>
-                        </li>
-                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                            <h6 className="mb-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                                Facebook</h6> 
-                                <span className="text-secondary">bootdey</span>
-                        </li>
-                     </ul>
-                    </div>
                 </div>
 
-                <div className='col-md-8'>
+                <div className='col-md-8 align-self-center' >
                     <div className='card mb-3'>
                         <div className='card-body'>
                             <div className='row'>
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Full Name</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary"> Kenneth Valdez</div>
+                            {loading == true ? 
+                            <div class="col-sm-9 text-secondary"><Placeholder xs = {10}/></div>
+                            :
+                            <div class="col-sm-9 text-secondary">{profileData.fullName}</div>
+                            }
                             </div>
-                            <hr/>
-                            <div className='row'>
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Birthday</h6>
-                                </div>
-                            <div class="col-sm-9 text-secondary"> 01/02/1993</div>
-                            </div>
+                            
                             <hr/>
                             <div className='row'>
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">State</h6>
                                 </div>
-                            <div class="col-sm-9 text-secondary">Virginia</div>
+                            {loading == true ?
+                            <div class="col-sm-9 text-secondary"><Placeholder xs = {10}/></div>
+                            :
+                            <div class="col-sm-9 text-secondary">{profileData.state}</div>
+                            }
+                            
                             </div>
                             <hr/>
                             <div className='row'>
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Email</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">dummy@email.com</div>
+                            {loading == true ?
+                            <div class="col-sm-9 text-secondary"><Placeholder xs = {10}/></div>
+                            :
+                            <div class="col-sm-9 text-secondary">{profileData.email}</div>
+                            }
+                            
                             </div>
                             <hr/>
                             <div className='row'>
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">Favorite Camera</h6>
                                 </div>
-                            <div class="col-sm-9 text-secondary">Fujifilm X-T4</div>
+                            {loading == true ?
+                            <div class="col-sm-9 text-secondary"><Placeholder xs = {10}/></div>
+                            :
+                            <div class="col-sm-9 text-secondary">{profileData.favoriteCamera}</div>
+                            }
+                            
                             </div>
                             <hr/>
                             <div className='row'>
-                                <div class="col-sm-12"> 
-                                    <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
-                                </div>
+                                <EditModal id = {id} profile = {profile}/>
                             </div>
                             
                         </div>
                     </div>
                 </div>
-
+                </div>
             </div>
-
-
-        </div>
+            </section>
+            
+            </div>
         </>
     );
 }

@@ -1,4 +1,3 @@
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useRef, useEffect } from "react";
 import  storage  from "../firebase.js";
@@ -6,17 +5,23 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { db,auth } from '../firebase';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { async } from '@firebase/util';
 import {BsImages} from 'react-icons/bs';
 import Modal from 'react-bootstrap/Modal'
 import logo from '../Images/AvGf.gif'
+import "../css/Userpage.css"
+import {useDispatch, useSelector} from 'react-redux';
+import { editPhoto } from '../reduxFiles/actions.js';
+import {MdUpload} from 'react-icons/md';
+import { doc, updateDoc } from 'firebase/firestore';
+import {getEditProfileOfClicks} from "../reduxFiles/selectors";
 
 // props store the value from the previous page
-const UploadPost = (props) =>  {
+const EditPhotoProfile = ({id, profile}) =>  {
 
     //for modal
-    const handleClose = () => props.setShowModal(false);
+    const [show,setShow] = useState(false)
+
     //for storing image in the database (not firestore)
     const [percent,setPercent] = useState(0);
     const [file, setFile] = useState("");
@@ -24,13 +29,13 @@ const UploadPost = (props) =>  {
     //for firestore
     const [title, setTitle] = useState("");
     const [postText, setPostText] = useState("");
-    const postsCollectionRef = collection(db,"posts");
-    const likeCollectionRef = collection(db,"likes");
 
-
+    const dispatch = useDispatch();
+    const profileData = useSelector(getEditProfileOfClicks);
 // showing picture 
 
     const [preview, setPreview] = useState("");
+    
 
     const handleChange = event => {
         
@@ -55,7 +60,7 @@ const UploadPost = (props) =>  {
             alert("Please choose a file first!")
         }
         // the path is stored in storage, unsed the user uid forlder and each have the name of the filename
-        const storageRef = ref(storage, auth.currentUser.uid + "/post/" + file.name)
+        const storageRef = ref(storage, auth.currentUser.uid + "/profile/" + file.name)
         
         const uploadTask = uploadBytesResumable(storageRef,file);
         
@@ -71,23 +76,13 @@ const UploadPost = (props) =>  {
             },
             (err) => console.log(err),
             async () => {
-                const like = await addDoc(likeCollectionRef, {whoLiked:[]})
                 const urlLoad = await getDownloadURL(storageRef);
-                //creating document in firebase with the url image
-             
-                await addDoc(postsCollectionRef, {
-                    title,
-                    postText,
-                    idUser: props.id,
-                    imgPath:urlLoad,
-                    likeID:like.id,
-
-                    createdAt:serverTimestamp()
-                    
-                });
-                
-                }
-            
+                //updating profile image
+                const docRef = doc(db, 'accounts', id)
+                updateDoc(docRef, {profileImgPath:urlLoad}).then(response => {
+                dispatch(editPhoto(urlLoad))
+                })
+            }
         ); 
         
     }
@@ -95,21 +90,28 @@ const UploadPost = (props) =>  {
   
     return(
         <>
+            <div className='profile-pic'> 
+                <label class = "-label" onClick ={() => setShow(true)}>
+                    <MdUpload/>
+                    <span>Change Image</span>
+                </label>
+                {   profileData.photo === ""  ?
+                    <img src="/images/no-profile.jpg" alt="Admin" width="150" id = "changePhoto" />
+                    :
+                    <img src={profileData.photo} alt="Admin" width="150" id = "changePhoto"/>
+                }
+            </div>
+            
             {percent == 0 ? 
 
-            <Modal show = {props.showModal} onHide={handleClose}>
+            <Modal show = {show} onHide={() => setShow(false)}>
             
             <Modal.Header closeButton style={{border:"none"}}>
-                <h1 className="text-center">POST HERE</h1>
+                <h1 className="text-center">Change your profile Picture</h1>
             </Modal.Header>
             <Modal.Body>
             <form>
             <div className='form-group'>
-            
-            <input type='text' name = "Title" placeholder='Title' className='form-control' onChange={(event) => {setTitle(event.target.value)}}/>
-            <hr/>
-            <textarea className='form-control' name = "PostArea" placeholder='Write your post here...' rows={'3'} style={{height:'90px'}} onChange={(event) => {setPostText(event.target.value)}}></textarea>
-            <hr/>
 
             <input type='file' onChange={handleChange}/>
             
@@ -138,13 +140,13 @@ const UploadPost = (props) =>  {
 
             
 
-            <Modal size= 'lg' centered show={props.showModal} onHide={handleClose}>
+            <Modal size= 'lg' centered show={show} onHide={() => setShow(false)}>
             <Modal.Header closeButton style={{border:"none"} }>
             </Modal.Header>
             <Modal.Body className="card-body p-5">
             <Col>
                 <Row className="mb-4 ">
-                <h1 className="text-center mb-5">Your post was Uploaded !!!!</h1>
+                <h1 className="text-center mb-5">You changed your profile picture !!!!</h1>
                 </Row>
             </Col>
             </Modal.Body>
@@ -160,4 +162,4 @@ const UploadPost = (props) =>  {
         </>
     );
 }
-export default UploadPost;
+export default EditPhotoProfile;
