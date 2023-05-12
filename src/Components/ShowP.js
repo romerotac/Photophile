@@ -19,8 +19,6 @@ function ShowP({sort,id}){
     const [hearted, setHearted] = useState(false)
     const [profilePost, setProfilePost] = useState([])
     
-    
-    
     useEffect(() => {
         sortingArray()
     },[sort])

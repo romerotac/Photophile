@@ -84,9 +84,8 @@ function Login({setIsAuth}){
         signInWithPopup(auth,provider).then((result) => {
             localStorage.setItem("isAuth",true);
             setIsAuth(true);
+            addUser()
             checkUserinDatabase(auth.currentUser.uid);
-            //console.log(profile[0].name);
-            //dispatch(editProfile(profile[0].name));
             localStorage.setItem('userID', auth.currentUser.uid)
             navigate('/userpage');
         })
