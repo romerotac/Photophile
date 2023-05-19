@@ -11,19 +11,24 @@ import { async } from '@firebase/util';
 import { Card } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Roll from '../Images/roll.svg';
-function ShowP({sort,id}){
+import { useDispatch, useSelector } from 'react-redux';
+import {addLiked} from '../reduxFiles/actions'
+import {getEditLikedClick} from "../reduxFiles/selectors";
 
+function ShowP({sort,id}){
+    //const dispatch = useDispatch();
+    //const dataOfLiked = useSelector(getEditLikedClick);
+    //console.log(dataOfLiked)
     const postsCollectionRef = collection(db,'posts');
     const [i,setI] = useState(3);
     const [more,setMore] = useState(true);
-    const [hearted, setHearted] = useState(false)
     const [profilePost, setProfilePost] = useState([])
+    //const [liked, setLiked] = useState([])
     
     useEffect(() => {
         sortingArray()
     },[sort])
 
-    console.log(profilePost)
     function sortingArray(){
         if (sort === 1) { 
             //sorting based on friends
@@ -54,13 +59,13 @@ function ShowP({sort,id}){
     }
 
     const addLike = (likeID) => {
-        
+        console.log("I'm liked")
         const docLike = doc(db,"likes", likeID)
         updateDoc(docLike,{whoLiked : arrayUnion(id)})
     }
 
     const removeLike = (likeID) => {
-      
+        console.log("I'm not liked")
         const docLike = doc(db,"likes", likeID)
         updateDoc(docLike,{whoLiked : arrayRemove(id)})
     }
@@ -84,13 +89,21 @@ function ShowP({sort,id}){
                 var profileImgPath = docSnap.data().profileImgPath;
                 var date = (usage.createdAt).toDate();
                 var likeID = usage.likeID
-                var likeType = isLiked(likeID)
-                console.log(date)
-                return({title,postText,imgPath,user,profileImgPath,date,likeID,likeType})
+                /*
+                const docLike = doc(db,"likes",likeID)
+                const docSnap1 = await getDoc(docLike)
+                var isEqual = docSnap1.data().whoLiked.some( (data) => {
+                    return data == id
+                })
+                */
+                //dispatch(addLiked(likeID))
+
+                return({title,postText,imgPath,user,profileImgPath,date,likeID})
                 //setProfilePost(...profilePost,[user,image])
 
             }))
             setProfilePost(data)
+            
         }
         getUser();
 
@@ -109,25 +122,10 @@ function ShowP({sort,id}){
         },1500)
     }
     
-    function isLiked(likeID){
-        var flag = false;
-        const getUser = async() => {
-            const docLike = doc(db,"likes",likeID)
-            const docSnap = await getDoc(docLike)
-            docSnap.data().whoLiked.map( (data) => {
-                if (data == id){
-                    flag = true
-                }
-            })
-        }
-        getUser();
-        return flag
-    }
-    
-    
     return(
         <>
-        <div id = "ScrollableDiv" style={{overflowY:"scroll", height: "inherit"}}>
+        
+        <div id = "InfiniteScroll" style={{overflowY:"scroll", height: "inherit"}}>
         <InfiniteScroll
         dataLength = {i}
         hasMore={more}
@@ -172,12 +170,17 @@ function ShowP({sort,id}){
                             <Card.Body>
                                 <div className='row'>
                                 <div className="col-2">
-                                { post.likeType === false
+
+                                <FaHeart onClick={addLike(post.likeID)} style={{cursor:"pointer"}}/>
+
+                                <FaRegHeart onClick={removeLike(post.likeID)} style={{cursor:"pointer"}}/>
+
+                                {/* post.likeType === false
                                 ?
-                                <FaRegHeart onClick={addLike(post.likeID)} style={{cursor:"pointer"}}/>
+                                <FaHeart onClick={addLike(post.likeID)} style={{cursor:"pointer"}}/>
                                 :
-                                <FaHeart onClick={removeLike(post.likeID)} style={{cursor:"pointer"}}/>
-                                }
+                                <FaRegHeart onClick={removeLike(post.likeID)} style={{cursor:"pointer"}}/>
+                                */}
                                 
                                 
                                 </div>

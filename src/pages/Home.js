@@ -18,6 +18,8 @@ import {HiDotsHorizontal} from 'react-icons/hi';
 import ShowP from "../Components/ShowP";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Categories from '../Components/Categories';
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'bootstrap';
 //const ShowP = lazy(() => import("../Components/ShowP"))
 function Home() {
 
@@ -29,7 +31,7 @@ function Home() {
     const [id, setID] = useState("")
     //set {0 = none, 1 = Friends, 2 = Popular, 3 = Recent, 4 = Latest}
     const [category,setCategory] = useState(0)
-
+    let navigate  = useNavigate();
     const updateCategory = number => {
         setCategory(number)
     }
@@ -65,10 +67,12 @@ function Home() {
     
     return(
         <div>
+                 
         <section class="min-vh-100 d-flex align-items-center justify-content-center py-3" style={{background: "#61D0FF"}}>
             <div className='fixed-top'>
                 <div className= "main-body">
                 <Navigation/> 
+                <button onClick = {() => {navigate('/trial')}}>Hello</button>
                 </div>
             </div>       
             <div class="container" style={{background:"white", height: "80vh", margin:"0"}}> 
@@ -116,7 +120,9 @@ function Home() {
                     </div>
                 </div>
             </div>
-        </section>     
+            
+        </section>
+        
         {
         showModal === true && <UploadPost showModal = {showModal} setShowModal = {setShowModal} id = {id}/>}
                 

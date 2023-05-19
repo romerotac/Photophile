@@ -62,13 +62,11 @@ function Login({setIsAuth}){
         var isEqual = account.some((ref) => {
             return ref.data.id == data
         })
-        console.log(isEqual)
+        
         if (isEqual != true){
             addUser()
         }
     }
-
-    
 
     //sign in with google
     let navigate = useNavigate();
