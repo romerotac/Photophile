@@ -2,17 +2,21 @@ import React, {useEffect, useState} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { collection, getDocs, snapshotEqual, doc, getDoc, updateDoc, arrayUnion, arrayRemove} from 'firebase/firestore';
 import { db,auth } from '../firebase';
-import {setPost,setLiked,addWhoLiked, removeWhoLiked,latestPost, recentPost,mostLikedPost} from '../reduxFiles/actions';
+import {setPost,setLiked,addWhoLiked, removeWhoLiked,latestPost, recentPost,mostLikedPost,setComments} from '../reduxFiles/actions';
 import { Card } from 'react-bootstrap';
 import {FaRegComment,FaRegHeart, FaHeart} from 'react-icons/fa';
-import {HiDotsHorizontal} from 'react-icons/hi';
+import {BsFillPersonFill, BsFillPersonCheckFill} from 'react-icons/bs'
 import {getEditPost,getEditLike} from "../reduxFiles/selectors";
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Roll from '../Images/roll.svg';
+import CommentModal from "./CommentModal";
 
 function Trial(){
     const [i,setI] = useState(3);
     const [more,setMore] = useState(true);
+
+    const [friend, setFriend] = useState(false)
 
     const postData = useSelector(getEditPost)
     const likesList = useSelector(getEditLike)
@@ -89,14 +93,14 @@ function Trial(){
             const docRef = doc(db, "accounts", String(usage.idUser))
             const docSnap = await getDoc(docRef)
             var title = usage.title;
-            var postText = usage.postText;
+            var commentID = usage.commentID;
             var imgPath = usage.imgPath;
             var user = String(docSnap.data().name);
             var profileImgPath = docSnap.data().profileImgPath;
             var date = (usage.createdAt).toDate();
             var likeID = usage.likeID;
 
-            return({title,postText,imgPath,user,profileImgPath,date,likeID})
+            return({title,imgPath,user,profileImgPath,date,likeID,commentID})
 
         }))
         dispatch(setPost(data))
@@ -126,11 +130,11 @@ function Trial(){
                             <Card.Title style={{marginBottom:"2px", marginTop:"2px", }}>
                                 <div className='row justify-content-start' style = {{margin:"auto"}}>
                                     <div className='col-2'>                                    
-                                    {post.profileImgPath == undefined
+                                    {post.profileImgPath == ''
                                     ?
-                                    <img src= {'../images/no-profile.jpg'} alt = {"profile"} style={{width:"100%", height:"auto", borderRadius:'100%', height:'30px',width:'30px', border:"3px solid rgba(255,255,255,1)"}} ></img>  
+                                    <img src='..\images\no-profile.jpg' style={{width:"100%", height:"auto", borderRadius:'100%', height:'30px',width:'30px', border:"3px solid rgba(255,255,255,1)", alignSelf:'center'}}></img> 
                                     :
-                                    <img src= {post.profileImgPath} alt = {"profile"} style={{width:"100%", height:"auto", borderRadius:'100%', height:'30px',width:'30px', border:"3px solid rgba(255,255,255,1)"}} ></img> 
+                                    <img src= {post.profileImgPath} alt = {"profile"} style={{width:"100%", height:"auto", borderRadius:'100%', height:'30px',width:'30px', border:"3px solid rgba(255,255,255,1)", alignSelf:'center'}} ></img> 
                                     }
 
                                     </div>
@@ -161,10 +165,16 @@ function Trial(){
                                    
                                 </div>
                                 <div className="col-2">
-                                <FaRegComment onClick = {() => {console.log("start comment")}} style={{cursor:"pointer"}} />
+                                <CommentModal commentID = {post.commentID} userID = {id}/>
                                 </div>
                                 <div className="col" style={{textAlign:"right"}}>
-                                <HiDotsHorizontal onClick={() => {console.log("start options")}} style={{cursor:"pointer"}}/>
+                                { friend == false
+                                ?
+                                <BsFillPersonFill onClick={() => {setFriend(true)}} style={{cursor:"pointer"}}/>
+                                :
+                                <BsFillPersonCheckFill onClick={() => {setFriend(false)}} style = {{color:'green'}}/>
+                                }
+                                
                                 </div>
                                 </div>
                             </Card.Body>
@@ -174,13 +184,8 @@ function Trial(){
     })
 
     return (
-        <>
-        <h1> Welcome to Trial </h1>
-        <button onClick={()=>{dispatch(latestPost())}}>Latest</button>
-        <button onClick={()=>{dispatch(recentPost())}}>Recent</button>
-        <button onClick={()=>{dispatch(mostLikedPost(likesList.liked))}}>Most Liked</button>
-        
-        <div id = "scrollDiv" style={{overflowY:"scroll", height:"700px", maxWidth:"400px"}}>
+        <>     
+        <div id = "scrollDiv" style={{overflowY:"scroll", height: "inherit"}}>
             <InfiniteScroll
             dataLength = {i}
             hasMore={more}

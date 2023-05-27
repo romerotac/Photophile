@@ -31,9 +31,6 @@ function Login({setIsAuth}){
 
     // creating state to contain the user data
     const [account,setAccount] = useState([]);
-    
-    //tryOne
-    const [profile,setProfile] = useState([]);
 
     // Creating collection for account user
     const accountsCollectionRef = collection(db, 'accounts');
@@ -60,10 +57,12 @@ function Login({setIsAuth}){
     //function that check if the user it's already in the database
     function checkUserinDatabase(data){
         var isEqual = account.some((ref) => {
-            return ref.data.id == data
+            return ref.data.id === data
         })
         
+
         if (isEqual != true){
+            console.log("done")
             addUser()
         }
     }
@@ -85,7 +84,6 @@ function Login({setIsAuth}){
         signInWithEmailAndPassword(auth, values.email, values.password)
         .then(() => {
             checkUserinDatabase(auth.currentUser.uid);
-            console.log(values.email)
             localStorage.setItem('userID', JSON.stringify(auth.currentUser.uid))
             navigate('/userpage')
             

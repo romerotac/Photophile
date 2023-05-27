@@ -5,8 +5,6 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { db,auth } from '../firebase';
-import { async } from '@firebase/util';
-import {BsImages} from 'react-icons/bs';
 import Modal from 'react-bootstrap/Modal'
 import logo from '../Images/AvGf.gif'
 import "../css/Userpage.css"

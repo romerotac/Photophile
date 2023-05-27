@@ -16,9 +16,6 @@ import {addLiked} from '../reduxFiles/actions'
 import {getEditLikedClick} from "../reduxFiles/selectors";
 
 function ShowP({sort,id}){
-    //const dispatch = useDispatch();
-    //const dataOfLiked = useSelector(getEditLikedClick);
-    //console.log(dataOfLiked)
     const postsCollectionRef = collection(db,'posts');
     const [i,setI] = useState(3);
     const [more,setMore] = useState(true);
@@ -174,13 +171,6 @@ function ShowP({sort,id}){
                                 <FaHeart onClick={addLike(post.likeID)} style={{cursor:"pointer"}}/>
 
                                 <FaRegHeart onClick={removeLike(post.likeID)} style={{cursor:"pointer"}}/>
-
-                                {/* post.likeType === false
-                                ?
-                                <FaHeart onClick={addLike(post.likeID)} style={{cursor:"pointer"}}/>
-                                :
-                                <FaRegHeart onClick={removeLike(post.likeID)} style={{cursor:"pointer"}}/>
-                                */}
                                 
                                 
                                 </div>

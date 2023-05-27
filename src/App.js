@@ -14,7 +14,6 @@ import UploadPost from './Components/UploadPost';
 import Test from './pages/test';
 import Test1 from './pages/test1';
 import Test2 from './pages/test2';
-import Trial from './Components/Trial';
 import {Provider} from 'react-redux';
 import {store} from './reduxFiles/store';
 
@@ -44,7 +43,6 @@ function App() {
           <Route path = '/test' element = { <Test/>}></Route>
           <Route path = '/test/1' element = { <Test1/>}></Route>
           <Route path = '/test/2' element = {<Test2/>}/>
-          <Route path = '/trial' element = {<Trial/>}></Route>
       </Routes>         
     </div>
     </Provider>

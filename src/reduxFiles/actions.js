@@ -1,7 +1,29 @@
+
+export const setComments = (comments) => {
+    return{
+        type: 'SET_COMMENTS',
+        payload:comments,
+    };
+};
+
+export const putNewComment = (userID,newComment) =>{
+    return{
+        type:"PUT_NEW_COMMENT",
+        payload:{userID,newComment}
+    };
+}
+
 export const setPost = (post) => {
     return{
     type: 'SET_POST',
     payload:post,
+    };
+};
+
+export const newPost = (title,imgPath,user,profileImgPath,date,likeID,commentID) =>{
+    return{
+        type:'NEW_POST',
+        payload:{title,imgPath,user,profileImgPath,date,likeID,commentID}
     };
 };
 

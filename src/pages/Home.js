@@ -16,6 +16,7 @@ import { Card } from 'react-bootstrap';
 import {FaRegComment,FaRegHeart} from 'react-icons/fa';
 import {HiDotsHorizontal} from 'react-icons/hi';
 import ShowP from "../Components/ShowP";
+import Trial from "../Components/Trial";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Categories from '../Components/Categories';
 import { useNavigate } from 'react-router-dom';
@@ -62,20 +63,18 @@ function Home() {
             setProfilePic(user[0].data.profileImgPath)
         })
         .catch(error => console.log(error.message))
-
     }
     
     return(
         <div>
                  
-        <section class="min-vh-100 d-flex align-items-center justify-content-center py-3" style={{background: "#61D0FF"}}>
+        <section className="min-vh-100 d-flex align-items-center justify-content-center py-3" style={{background: "#61D0FF"}}>
             <div className='fixed-top'>
                 <div className= "main-body">
                 <Navigation/> 
-                <button onClick = {() => {navigate('/trial')}}>Hello</button>
                 </div>
             </div>       
-            <div class="container" style={{background:"white", height: "80vh", margin:"0"}}> 
+            <div className="container" style={{background:"white", height: "80vh", margin:"0"}}> 
                 <div className='row justify-content-center' style={{height:"inherit"}}>
                     <div className='col-3' >
                         <div className='row'style={{padding:'0px'}} >
@@ -104,7 +103,7 @@ function Home() {
                         </div> 
                     </div>
                     <div className='col-4' style={{marginLeft:"20px", marginRight:"20px", height:"inherit"}}>
-                    <ShowP sort = {category} id = {id}/>   
+                    <Trial/>
                     </div>
                     
                     <div className='col-4' style={{marginLeft:"20px", marginRight:"20px", overflowY:"scroll", height:"inherit"}}>
@@ -124,7 +123,7 @@ function Home() {
         </section>
         
         {
-        showModal === true && <UploadPost showModal = {showModal} setShowModal = {setShowModal} id = {id}/>}
+        showModal === true && <UploadPost showModal = {showModal} setShowModal = {setShowModal} id = {id} profileImg = {profilePic}/>}
                 
         </div>
                 

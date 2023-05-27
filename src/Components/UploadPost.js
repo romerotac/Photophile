@@ -10,10 +10,14 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { async } from '@firebase/util';
 import {BsImages} from 'react-icons/bs';
 import Modal from 'react-bootstrap/Modal'
-import logo from '../Images/AvGf.gif'
+import logo from '../Images/AvGf.gif';
+import { useDispatch } from 'react-redux';
+import {newPost} from '../reduxFiles/actions';
 
 // props store the value from the previous page
 const UploadPost = (props) =>  {
+
+    const dispatch = useDispatch();
 
     //for modal
     const handleClose = () => props.setShowModal(false);
@@ -26,6 +30,7 @@ const UploadPost = (props) =>  {
     const [postText, setPostText] = useState("");
     const postsCollectionRef = collection(db,"posts");
     const likeCollectionRef = collection(db,"likes");
+    const commentCollectionRef = collection(db,"comments");
 
 
 // showing picture 
@@ -71,21 +76,21 @@ const UploadPost = (props) =>  {
             },
             (err) => console.log(err),
             async () => {
-                const like = await addDoc(likeCollectionRef, {whoLiked:[]})
                 const urlLoad = await getDownloadURL(storageRef);
+                const like = await addDoc(likeCollectionRef, {whoLiked:[]})
+                const comment = await addDoc(commentCollectionRef,{imgPostPath:urlLoad, title, mainComment:postText, otherComments:[] })
                 //creating document in firebase with the url image
              
                 await addDoc(postsCollectionRef, {
                     title,
-                    postText,
                     idUser: props.id,
                     imgPath:urlLoad,
                     likeID:like.id,
-
+                    commentID:comment.id,
                     createdAt:serverTimestamp()
                     
                 });
-                
+                dispatch(newPost(title,urlLoad,props.id,props.profileImg,serverTimestamp(),like.id,comment.id))
                 }
             
         ); 
