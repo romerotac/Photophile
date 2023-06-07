@@ -55,8 +55,8 @@ function EditModal({id,profile}) {
 
     return(
         <>
-        <div class="col-sm-12"> 
-            <a class="btn btn-info " target="__blank" onClick={handleOpen}>Edit</a>
+        <div className="col-sm-12"> 
+            <a className="btn btn-info" target="__blank" onClick={handleOpen}>Edit</a>
         </div>
         <Modal size= 'lg' centered show={show} onHide = {handleClose} >  
         <Modal.Header closeButton style={{border:"none"}}>

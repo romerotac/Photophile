@@ -88,4 +88,13 @@ export const editPhoto = photo =>({
     payload:{photo},
 });
 
+export const setSocial = social =>({
+    type:'SET_SOCIAL',
+    payload:{social}
+})
+
+export const updateSocial = (socialURL,type) =>({
+    type:'SOCIAL_EDIT_CLICKED',
+    payload:{socialURL,type}
+})
 

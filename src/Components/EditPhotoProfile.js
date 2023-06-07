@@ -89,7 +89,7 @@ const EditPhotoProfile = ({id, profile}) =>  {
     return(
         <>
             <div className='profile-pic'> 
-                <label class = "-label" onClick ={() => setShow(true)}>
+                <label className = "-label" onClick ={() => setShow(true)}>
                     <MdUpload/>
                     <span>Change Image</span>
                 </label>

@@ -12,7 +12,20 @@ export const changeProfileOnClick = (state = "", action) => {
         case 'FAVORITECAMERA_EDIT_CLICKED':
             return {...state, favoriteCamera: action.payload.favoriteCamera}    
         case 'PROFILEPHOTO_EDIT_CLICKED':
-            return {...state, photo: action.payload.photo}  
+            return {...state, photo: action.payload.photo}
+        case 'SET_SOCIAL':
+            return {...state, social: action.payload.social}
+        case 'SOCIAL_EDIT_CLICKED':
+            var socialObject = {}
+            Object.keys(state.social).map((ref) => {
+                ref === action.payload.type
+                ?
+                socialObject = {...socialObject, ...{[ref]:action.payload.socialURL}}
+                :
+                socialObject = {...socialObject, ...{[ref]:state.social[ref]}}
+            })
+
+            return {...state, social: socialObject}
         default:
             return state;
     }
