@@ -54,6 +54,11 @@ function CommentModal({commentID, userID}){
 
         
         dispatch(putNewComment(userID,newComment))
+        const accountsdocument = doc(db,'accounts',userID)
+                getDoc(accountsdocument).then(response => {
+                    dispatch(setOtherUserComment(response.data(), userID))
+                })
+
         updateDoc(commentDocument, {otherComments:arrayUnion({userID:userID,newComment:newComment})})
         setNewComment("")
         
