@@ -6,23 +6,48 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {getEditComment} from "../reduxFiles/selectors";
-import {setComments,putNewComment} from '../reduxFiles/actions';
+import {setComments,putNewComment, setOtherUserComment} from '../reduxFiles/actions';
 import { db } from '../firebase';
-import {doc, getDoc, updateDoc, arrayUnion} from 'firebase/firestore';
+import {doc, getDoc, updateDoc, arrayUnion, collection} from 'firebase/firestore';
 
 function CommentModal({commentID, userID}){
+    
     
     const commentData = useSelector(getEditComment)
     const [show,setShow] = useState(false)
     const [newComment, setNewComment] = useState("")
     const dispatch = useDispatch();
     const commentDocument = doc(db,'comments',commentID)
-       
+    
     function getComments() { 
         getDoc(commentDocument)
         .then(response => {
             dispatch(setComments(response.data()))
+                response.data().otherComments.map((data,index) => {
+                const accountsdocument = doc(db,'accounts',data.userID)
+                getDoc(accountsdocument).then(response => {
+                    
+                    dispatch(setOtherUserComment(response.data() , data.userID))
+                })
+            })
+            
+            
+
         }).catch(error => console.log(error.message))
+
+
+    }
+
+    //fuction used to render the info from each user in the comment section
+    function otherCom(data){ 
+        
+        if (data.info != undefined){
+            return(
+            <p>{data.info.name}: {data.newComment}</p>
+        )
+        } else {
+            return(<></>)
+            }
     }
     
     const addComment = () => {
@@ -68,9 +93,7 @@ function CommentModal({commentID, userID}){
                         {commentData.comments.otherComments != undefined 
                         ?
                         commentData.comments.otherComments.map((data,index)=>
-                            <p key={index}>
-                            {data.userID}: {data.newComment}
-                            </p>
+                            otherCom(data)  
                         )
                         :
                         <p>none</p>

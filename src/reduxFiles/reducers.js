@@ -131,6 +131,32 @@ export const commentState = (state = comment,action) => {
                         otherComments: state.comments.otherComments.concat({userID:action.payload.userID , newComment:action.payload.newComment}),
                     }
                     }
+
+        case "SET_OTHER_USER_COMMENT":
+            var newCommentOther = []
+            state.comments.otherComments.map((ref) => {
+                {
+                    if (ref.userID === action.payload.userID)
+                    {
+                    var commentObject = {userID:ref.userID, newComment: ref.newComment, info:action.payload.data}
+                    newCommentOther.push(commentObject)
+                    }else{
+                        newCommentOther.push(ref)
+                    }
+                    
+                }
+            
+            })
+            
+            return{...state, comments:{
+                title: state.comments.title,
+                imgPostPath:state.comments.imgPostPath,
+                mainComment:state.comments.mainComment,
+                otherComments: newCommentOther
+                } 
+                
+            }
+            
         default:
             return state;
      }

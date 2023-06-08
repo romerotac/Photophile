@@ -98,3 +98,7 @@ export const updateSocial = (socialURL,type) =>({
     payload:{socialURL,type}
 })
 
+export const setOtherUserComment = (data,userID) => ({
+    type: 'SET_OTHER_USER_COMMENT',
+    payload:{data,userID}
+})
